@@ -1,0 +1,44 @@
+############Source code#############
+module priority_encoder(
+clk,
+data,
+out,
+valid
+);
+input clk;
+input wire [3:0]data;
+output reg[1:0]out;
+output reg valid;
+
+always@ (posedge clk)
+begin
+out[1]= data[3] | (~data[3]&data[2]);
+out[0]= (data[1]&~data[2]&~data[3])| data[3];
+valid= data[1]|data[0]|data[2]|data[3];
+end
+endmodule
+
+
+###############test bench#################
+module priority_encoder_tb;
+reg clk;
+reg [3:0]data;
+wire [1:0]out;
+wire valid;
+always #2.5 clk=~clk;
+priority_encoder dut(.clk(clk),.data(data),.out(out),.valid(valid));
+initial begin
+clk=1;
+data[3:0]=4'b1000;
+#5 data=4'b0110;
+#5 data=4'b0011;
+#5 data=4'b0001;
+#5 data=4'b1010;
+#5 data=4'b0001;
+#5 data =4'b1100;
+#5
+$finish;
+
+end
+endmodule
+
