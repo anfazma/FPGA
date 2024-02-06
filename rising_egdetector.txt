@@ -1,0 +1,54 @@
+###################source code#################
+
+//moore based
+
+module rising_edge (
+input wire clk,
+input wire reset,
+input wire level,
+output reg tick
+);
+
+parameter [1:0]
+zero=2'b00,
+edgee = 2'b01,
+one = 2'b10;
+
+reg [1:0]state_reg,state_next;
+
+always@(posedge clk,posedge reset)
+begin
+if (reset)
+    state_reg=2'b00;
+    else 
+    state_reg=state_next;
+    end
+    
+    always@*
+    begin
+    state_next=state_reg;
+    tick=1'b0;
+    case(state_reg)
+    zero: if (level)
+            state_next=2'b01;
+            else
+            state_next=2'b00;
+    edgee:    if (level)
+    begin
+            state_next<=2'b11;
+            tick<=1'b1;
+            end
+            else
+            begin
+            state_next=2'b01;  
+            end 
+    one: if(level)
+           begin
+           state_next=2'b11;
+           end 
+           else
+           state_next=2'b00;
+           
+  endcase
+  end
+ endmodule
