@@ -52,3 +52,34 @@ if (reset)
   endcase
   end
  endmodule
+ 
+ 
+ 
+ ##############  test bench ################
+ 
+ module rising_edge_tb;
+reg clk;
+reg reset;
+reg level;
+wire tick;
+always #5 clk=~clk;
+rising_edge dut(.clk(clk),.reset(reset),.level(level),.tick(tick));
+initial begin
+clk=1;
+reset=1;
+level=1;
+#10 
+reset=0;
+level=1;
+#10
+reset=0;
+level=0;
+#10
+reset=0;
+level=1;
+#10 $finish;
+end
+endmodule
+
+
+################################################
